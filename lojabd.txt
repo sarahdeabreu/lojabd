@@ -1,0 +1,83 @@
+create database LOJA;
+ use LOJA; 
+ 
+ CREATE TABLE discos 
+ ( id_dc INT NOT NULL PRIMARY KEY,
+ disco VARCHAR(40) NOT NULL, 
+ preco DECIMAL( 7,2 ) NOT NULL ); 
+ 
+ insert into discos values (1,'disco da Melanie Martinez', 350);
+ insert into discos values (2,'Billie Elish' , 400); 
+ insert into discos values (3,'disco Arctic Monkeys', 900);
+ 
+ CREATE TABLE camisetas
+ ( id_cam INT NOT NULL PRIMARY KEY,
+ camisetas VARCHAR(40),
+ preco DECIMAL( 7,2 ) NOT NULL ); 
+ 
+ insert into camisetas values (1,'camiseta BTS', 70); 
+ insert into camisetas values (2,'moletom',200);
+ insert into camisetas values (3,'camiseta da Lolla', 150);
+ 
+ CREATE TABLE pulseiras 
+ ( id_pul INT NOT NULL PRIMARY KEY, 
+ pulseiras VARCHAR(40),
+ preco DECIMAL( 7,2 ) NOT NULL ); 
+ 
+ insert into pulseiras values (1,'mix de pulseiras do BTS', 40); 
+ insert into pulseiras values (2,'pulseira da Melanie Martinez',20);
+ insert into pulseiras values (3,'bracelete ', 100);
+
+CREATE TABLE cliente 
+( id_cli INT NOT NULL PRIMARY KEY,
+ nome VARCHAR(40), 
+ desconto DECIMAL( 7,2 ) );
+ 
+insert into cliente values (1,'Mari',0.8);
+insert into cliente values (2,'Ari',0.5);
+insert into cliente values (3,'Nick',0.9);
+
+CREATE TABLE vendedores 
+( id_ven INT NOT NULL PRIMARY KEY,
+ nome VARCHAR(40), 
+ comissao DECIMAL( 7,2 ) );
+ 
+insert into vendedores values (1,'Victor',0.7);
+insert into vendedores values (2,'Sarah', 0.3);
+insert into vendedores values (3,'Lili', 0.6);
+
+CREATE TABLE venda 
+( id_vend INT NOT NULL PRIMARY KEY,
+ data_vend VARCHAR(50) NOT NULL, 
+ id_ven INT NOT NULL, 
+ id_cli INT NOT NULL,
+ id_dc INT NOT NULL,
+ id_cam INT NOT NULL,
+ id_pul INT NOT NULL ); 
+ 
+insert into venda values (1,"01/01/2022",1,1,1,1,1); 
+insert into venda values (2,"07/03/2022",1,1,1,1,1);
+insert into venda values (3,"08/05/2022",3,3,3,3,3); 
+insert into venda values (4,"07/07/2022",1,2,3,2,1); 
+
+select discos.preco + camisetas.preco + pulseiras.preco 'total' 
+from discos,camisetas,pulseiras,venda 
+where venda.id_cam = camisetas.id_cam 
+and venda.id_pul = pulseiras.id_pul 
+and venda.id_dc = discos.id_dc;
+
+
+select (discos.preco + camisetas.preco + pulseiras.preco) - (discos.preco + camisetas.preco + pulseiras.preco) *cliente.desconto 'valor depois do desconto' from discos,camisetas,pulseiras,cliente,venda 
+where venda.id_dc = discos.id_dc and venda.id_cam = camisetas.id_cam 
+and venda.id_pul = pulseiras.id_pul and venda.id_cli = cliente.id_cli; 
+
+select vendedores.comissao 'Comissão', (discos.preco +camisetas.preco + pulseiras.preco) * vendedores.comissao 'valor da comissão' 
+from discos,camisetas,pulseiras,venda,vendedores where venda.id_dc = discos.id_dc and venda.id_cam = camisetas.id_cam 
+and venda.id_pul = pulseiras.id_pul and venda.id_ven = vendedores.id_ven; 
+
+select discos.discos 'discos', camisetas.camisetas 'camisetas', pulseiras.pulseiras 'pulseiras', (discos.preco + camisetas.preco + pulseiras.preco) 'total', (discos.preco + camisetas.preco + pulseiras.preco) -((discos.preco +camisetas.preco =pulseiras.preco))*cliente.desconto 'valor depois do desconto', (discos.preco +camisetas.preco + pulseiras.preco) * vendedores.comissao 'valor da comissão'
+from discos, camisetas, pulseiras,venda,vendedores,cliente where venda.id_dc = discos.id_dc 
+and venda.id_cam = camisetas.id_cam and venda.id_pul = pulseiras.id_pul
+and venda.id_ven = vendedores.id_ven and venda.id_cli = cliente.id_cli;
+
+
