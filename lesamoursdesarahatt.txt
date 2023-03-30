@@ -1,0 +1,107 @@
+create database lesamoursdesarah;
+
+use lesamoursdesarah;
+
+create table flowers (
+idflow int not null primary key,
+flores varchar (45),
+preco decimal (7,2)
+);
+
+insert into flowers values (1, 'buque de crisântemo', 200);
+insert into flowers values (2, 'coroa de bromélias', 360);
+insert into flowers values (3, 'garrafa poesia firminna', 149);
+select * from flowers;
+
+
+
+create table books (
+idbk int not null primary key,
+livro varchar (90),
+preco decimal (7,2)
+);
+
+insert into books values (10, 'Gustav Klimt: Drawings and Paintings por MR Toblas G Natter', 167);
+insert into books values (20, 'The Costume History: From Ancient Times to the 19th Century', 130);
+insert into books values (30, 'What Great Paintings Say', 500);
+select * from books;
+
+
+
+create table perfumes (
+idfume int not null primary key,
+perfume varchar (45),
+preco decimal (9,2)
+);
+
+insert into perfumes values (100, 'Chanel Nº5 Eau de Parfume', 1150);
+insert into perfumes values (200, 'Elixir Clinique Eau de Parfum', 639);
+insert into perfumes values (300, 'J'Adore, Dior', 4779);
+select * from perfumes;
+
+
+
+create table clientes (
+idcli int not null primary key,
+nomecliente varchar (45),
+desconto decimal (7,2)
+);
+
+insert into clientes values (1000, 'Mary', 0.3);
+insert into clientes values (2000, 'Joanne', 0.3);
+insert into clientes values (3000, 'Camile', 0.3);
+select * from clientes;
+
+
+
+create table vendedor (
+idven int not null primary key,
+nomevendedor varchar (45),
+comissao decimal (7,2)
+);
+
+insert into vendedor values (10000, 'Pinoquio', 0.05);
+insert into vendedor values (20000, 'Apolo', 0.07);
+insert into vendedor values (30000, 'Hades', 0.08);
+select * from vendedor;
+
+
+
+
+create table venda (
+idvend int not null primary key,
+dtvenda date,
+idflow int not null,
+idbk int not null,
+idfume int not null,
+idcli int not null,
+idven int not null
+);
+
+insert into venda values (78, date(now()), 1, 10, 100, 1000, 10000);
+insert into venda values (79, date(now()), 2, 20, 200, 2000, 20000);
+insert into venda values (80, date(now()), 3, 30, 300, 3000, 30000);
+insert into venda values (81, date(now()), 1, 20, 300, 1000, 20000);
+select * from venda;
+
+
+
+select (flowers.preco + books.preco + perfume.preco) 'Valor da Compra', (flowers.preco + books.preco + perfume.preco) - ((flowers.preco + books.preco + perfume.preco) * clientes.desconto) 'Valor com Desconto'
+from flowers, books, perfume, venda, clientes
+where venda.idflow = flowers.idflow and venda.idbk = books.idbk and venda.idfume = perfume.idfume and venda.idcli = clientes.idcli;
+
+
+
+
+select (flowers.preco + books.preco + perfume.preco) 'Valor da Compra', ((flowers.preco + books.preco + perfume.preco) * vendedor.comissao) 'Valor da Comissão'
+from flowers, books, perfume, venda, vendedor
+where venda.idflow = flowers.idflow and venda.idbk = books.idbk and venda.idfume = perfume.idfume and venda.idven = vendedor.idven;
+
+
+
+
+select (flowers.preco + books.preco + perfume.preco) 'Valor da Compra', (flowers.preco + books.preco + perfume.preco) - ((flowers.preco + books.preco + perfume.preco) * clientes.desconto) 'Valor com Desconto', ((flowers.preco + books.preco + perfume.preco) * vendedor.comissao) 'Valor da Comissão'
+from flowers, books, perfume, venda, vendedor, clientes
+where venda.idflow = flowers.idflow and venda.idbk = books.idbk and venda.idfume = perfume.idfume and venda.idcli = clientes.idcli and venda.idven = vendedor.idven;
+
+
